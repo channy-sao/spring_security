@@ -1,3 +1,8 @@
 spring:
   application:
     name: spring_security_demo
+
+app:
+  jwt:
+    secret-key: "a3f8c9b2e1d045f78a2b4c6d8e0f1a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f"
+    access-token-expiration: "900000000"

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -31,7 +33,8 @@ public class SecurityConfig {
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter)
+      throws Exception {
     http.csrf(Customizer.withDefaults()) // Enable CSRF protection with default settings
         .cors(Customizer.withDefaults())
         // disable csrf filter
@@ -42,12 +45,11 @@ public class SecurityConfig {
         .formLogin(AbstractHttpConfigurer::disable)
         // disable request cache aware filter
         .requestCache(AbstractHttpConfigurer::disable)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             request ->
-                request.requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/users/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+                request.requestMatchers("/auth/login").permitAll().anyRequest().authenticated())
         .exceptionHandling(
             ex ->
                 ex.accessDeniedHandler(customAccessDenied)
@@ -77,7 +79,7 @@ public class SecurityConfig {
         User.builder()
             .username("admin")
             .password(passwordEncoder.encode("admin123"))
-            .roles("USER", "ADMIN")
+            .roles("SUPER_ADMIN", "ADMIN", "MANAGER")
             .build();
 
     // Return the in-memory manager populated with your users

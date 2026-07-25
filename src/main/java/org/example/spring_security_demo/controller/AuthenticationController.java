@@ -2,6 +2,7 @@ package org.example.spring_security_demo.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.spring_security_demo.dto.LoginRequest;
+import org.example.spring_security_demo.service.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class AuthenticationController {
 
   private final AuthenticationManager authenticationManager;
+  private final JwtService jwtService;
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody @Validated LoginRequest loginRequest) {
@@ -32,11 +34,14 @@ public class AuthenticationController {
               new UsernamePasswordAuthenticationToken(
                   loginRequest.getUsername(), loginRequest.getPassword()));
 
+      String accessToken = jwtService.generateAccessToken(loginRequest.getUsername());
+
       // បើត្រឹមត្រូវ៖ ត្រឡប់សារជោគជ័យ (នៅត្រង់នេះអ្នកអាចបង្កើត និងផ្ញើ JWT Token ត្រឡប់ទៅវិញបាន)
       return ResponseEntity.ok(
           Map.of(
               "message", "ការចូលប្រព័ន្ធបានជោគជ័យ!",
               "username", authentication.getName(),
+              "accessToken", accessToken,
               "roles", authentication.getAuthorities()));
 
     } catch (AuthenticationException e) {
