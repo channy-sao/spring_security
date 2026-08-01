@@ -1,13 +1,9 @@
-package org.example.spring_security_demo.securiry;
+package org.example.spring_security_demo.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -64,27 +60,27 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  @Bean
-  public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-    // Define a regular user
-    UserDetails user =
-        User.builder()
-            .username("user")
-            .password(passwordEncoder.encode("password123"))
-            .roles("USER")
-            .build();
-
-    // Define an admin user
-    UserDetails admin =
-        User.builder()
-            .username("admin")
-            .password(passwordEncoder.encode("admin123"))
-            .roles("SUPER_ADMIN", "ADMIN", "MANAGER")
-            .build();
-
-    // Return the in-memory manager populated with your users
-    return new InMemoryUserDetailsManager(user, admin);
-  }
+//  @Bean
+//  public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//    // Define a regular user
+//    UserDetails user =
+//        User.builder()
+//            .username("user")
+//            .password(passwordEncoder.encode("password123"))
+//            .roles("USER")
+//            .build();
+//
+//    // Define an admin user
+//    UserDetails admin =
+//        User.builder()
+//            .username("admin")
+//            .password(passwordEncoder.encode("admin123"))
+//            .roles("SUPER_ADMIN", "ADMIN", "MANAGER")
+//            .build();
+//
+//    // Return the in-memory manager populated with your users
+//    return new InMemoryUserDetailsManager(user, admin);
+//  }
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config)

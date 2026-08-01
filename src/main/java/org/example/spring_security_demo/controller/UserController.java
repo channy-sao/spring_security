@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController {
 
+    @PreAuthorize("hasRole('USER_READ')")
     @GetMapping
     public String getUser(){
         return "Get all users";

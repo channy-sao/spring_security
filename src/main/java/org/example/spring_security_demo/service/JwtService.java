@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.example.spring_security_demo.dto.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,18 +16,21 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtService {
+  private static final String AUTHORITIES_CLAIM = "authorities";
+
   @Value("${app.jwt.secret-key}")
   private String secreteKey;
 
   @Value("${app.jwt.access-token-expiration}")
   private Long accessTokenExpiration;
 
-  public String generateAccessToken(String username) {
+  public String generateAccessToken(CustomUserDetails userDetails) {
     Date now = new Date();
     return Jwts.builder()
         .issuedAt(now)
-        .subject(username)
+        .subject(userDetails.getUsername())
         .expiration(new Date(now.getTime() + accessTokenExpiration))
+        .claim(AUTHORITIES_CLAIM, userDetails.getAuthorities())
         .signWith(getSignInKey())
         .issuer("jwt.com")
         .compact();

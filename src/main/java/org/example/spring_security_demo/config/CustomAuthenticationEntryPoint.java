@@ -1,4 +1,4 @@
-package org.example.spring_security_demo.securiry;
+package org.example.spring_security_demo.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

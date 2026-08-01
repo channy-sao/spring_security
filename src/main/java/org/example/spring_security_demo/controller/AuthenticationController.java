@@ -1,6 +1,7 @@
 package org.example.spring_security_demo.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.spring_security_demo.dto.CustomUserDetails;
 import org.example.spring_security_demo.dto.LoginRequest;
 import org.example.spring_security_demo.service.JwtService;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,9 @@ public class AuthenticationController {
               new UsernamePasswordAuthenticationToken(
                   loginRequest.getUsername(), loginRequest.getPassword()));
 
-      String accessToken = jwtService.generateAccessToken(loginRequest.getUsername());
+      CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+      String accessToken = jwtService.generateAccessToken(userDetails);
 
       // បើត្រឹមត្រូវ៖ ត្រឡប់សារជោគជ័យ (នៅត្រង់នេះអ្នកអាចបង្កើត និងផ្ញើ JWT Token ត្រឡប់ទៅវិញបាន)
       return ResponseEntity.ok(

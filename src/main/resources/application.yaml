@@ -2,6 +2,22 @@ spring:
   application:
     name: spring_security_demo
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_security
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # Options: none, validate, update, create, create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
 app:
   jwt:
     secret-key: "a3f8c9b2e1d045f78a2b4c6d8e0f1a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f"
